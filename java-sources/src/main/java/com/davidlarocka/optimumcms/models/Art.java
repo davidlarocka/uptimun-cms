@@ -33,8 +33,6 @@ public class Art {
 	private String furl;
 	private String type_url;
 	
-	
-
    
     public void setCreatedCurrentEpoch() {
         this.created_at = Instant.now().getEpochSecond() ;
