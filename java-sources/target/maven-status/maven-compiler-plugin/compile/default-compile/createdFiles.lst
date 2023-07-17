@@ -1,0 +1,4 @@
+com/davidlarocka/optimumcms/OptimumCmsApplication.class
+com/davidlarocka/optimumcms/interfaces/ArtInterface.class
+com/davidlarocka/optimumcms/controllers/ArtController.class
+com/davidlarocka/optimumcms/models/Art.class
