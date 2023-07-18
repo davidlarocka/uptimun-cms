@@ -1,11 +1,7 @@
 package com.davidlarocka.optimumcms.models;
 
-import java.sql.Date;
 import java.time.Instant;
 
-import org.hibernate.annotations.CreationTimestamp;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +29,8 @@ public class Art {
 	private String furl;
 	private String type_url;
 	
+	private String inputs;
+	
    
     public void setCreatedCurrentEpoch() {
         this.created_at = Instant.now().getEpochSecond() ;
@@ -44,6 +42,10 @@ public class Art {
     
     public void setTsCurrentEpoch() {
         this.ts = Instant.now().getEpochSecond() ;
+    }
+    
+    public long getTs() {
+    	return ts;
     }
 
 	
