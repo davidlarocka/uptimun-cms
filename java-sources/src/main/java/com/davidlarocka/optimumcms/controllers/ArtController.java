@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.davidlarocka.optimumcms.controllers.helpers.FileHerper;
+import com.davidlarocka.optimumcms.controllers.services.FileService;
 import com.davidlarocka.optimumcms.interfaces.ArtInterface;
 import com.davidlarocka.optimumcms.models.Art;
 
@@ -39,7 +39,7 @@ public class ArtController {
 		arts.save(art);
 		
 		//generate output json html xml
-		FileHerper files = new FileHerper(site_dir, art.getTs() );
+		FileService files = new FileService(site_dir, art.getTs() );
 		files.generateOuputFiles(art);
 		
 		 
