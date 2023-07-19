@@ -1,6 +1,7 @@
 /home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/models/Art.java
 /home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/OptimumCmsApplication.java
-/home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/controllers/services/ParserHelper.java
 /home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/controllers/ArtController.java
+/home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/helpers/ParserHelper.java
 /home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/controllers/services/FileService.java
 /home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/interfaces/ArtInterface.java
+/home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/helpers/TemplatesHelper.java

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +21,8 @@ public class ArtController {
 	@Autowired
 	ArtInterface arts;
 	
-	@Value("${optimum.site}")
-    private String site_dir;
+	@Autowired
+	FileService files;
 	
 	@GetMapping
 	public List<Art> getAllArts(){
@@ -39,13 +38,9 @@ public class ArtController {
 		arts.save(art);
 		
 		//generate output json html xml
-		FileService files = new FileService(site_dir, art.getTs() );
+		files.defDirsName(art.getTs());
 		files.generateOuputFiles(art);
-		
-		 
 	}
-	
-	
 	
 }
 
