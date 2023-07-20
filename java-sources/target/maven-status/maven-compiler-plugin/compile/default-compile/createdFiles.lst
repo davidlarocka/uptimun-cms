@@ -4,4 +4,5 @@ com/davidlarocka/optimumcms/controllers/ArtController.class
 com/davidlarocka/optimumcms/models/Art.class
 com/davidlarocka/optimumcms/helpers/TemplatesHelper.class
 com/davidlarocka/optimumcms/helpers/ParserHelper.class
+com/davidlarocka/optimumcms/helpers/lang/LangHelper.class
 com/davidlarocka/optimumcms/controllers/services/FileService.class

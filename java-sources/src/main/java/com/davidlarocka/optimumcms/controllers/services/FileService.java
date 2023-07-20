@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
+import javax.swing.text.Document;
+
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,7 +17,6 @@ import com.davidlarocka.optimumcms.helpers.ParserHelper;
 import com.davidlarocka.optimumcms.helpers.TemplatesHelper;
 import com.davidlarocka.optimumcms.models.Art;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -44,7 +46,7 @@ public class FileService {
 
     public void generateOuputFiles(Art art)  throws IOException {
     	
-    	site_art = parser.replaceTemplateTags(site_art, "_fechac", String.valueOf(ts));
+    	site_art = parser.replaceTagForText(site_art, "_fechac", String.valueOf(ts).substring(0, 8));
     	
     	//Phersisting data in json
     	Files.createDirectories(Paths.get(site_art+"data/"));
@@ -53,27 +55,27 @@ public class FileService {
 		output.close();
     	
     	//create files to site (example: xml, json, html FROM optimum.output-data-art app prop)
-    	Map<String, String> map = this.findTypeOfOutputs();
+    	Map<String, String> map = parser.StringJsonToMap(type_outputs);
     	map.forEach((k, v) -> {
     		try {
 				Files.createDirectories(Paths.get(site_art+k));
-				
 				System.out.println("creating output arts:"+site_art + k  + "/"+ ts + "."+ v);
-				
-				
 				//Get templates tags for type to make outputs
 				template.setName("general."+v);//TODO: buscar nombre de template de tipo de arts
 				template.setPath(path_templates+k+"/");
 				//replace tags for content
-				String content = template.generateOutput();
-				//only generate if template isn't empty and templete exist = true
+				String content = template.generateOutput(art.getInputs());
+				//only generate if template isn't empty and template exist = true
 				if(content != null) {
 					//generate output
 					FileWriter output_file = new FileWriter(site_art + k  +"/"+ ts + "."+ v);
+					if(v.equals("html")) {
+						Document doc = (Document) Jsoup.parse(content);
+						content = doc.toString();
+					}
 					output_file.write(content);
 					output_file.close();
 				}
-				
 				//System.out.println("created arts:"+site_art + k  + "/"+ ts + "."+ v);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -82,15 +84,6 @@ public class FileService {
         });
 		
 	}
-    
-    @SuppressWarnings("unchecked")
-	private Map<String, String> findTypeOfOutputs() throws JsonMappingException, JsonProcessingException {
-    	ObjectMapper mapper = new ObjectMapper();
-        String json = type_outputs;
-        
-         Map<String, String> map = mapper.readValue(json, Map.class);
-         return map;
-    }
     
     private String EntityToStringJson(Art ent) throws JsonProcessingException {
 		 ObjectMapper mapper = new ObjectMapper();  

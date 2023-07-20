@@ -6,17 +6,18 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TemplatesHelper {
-
 	
 	private String name;
-	
 	private String path;
-	
 	Map<String, String> MapTemplateTags;
+	
+	@Autowired
+	ParserHelper parser; 
 	
 	public void setPath(String path) {
 		this.path = path;
@@ -26,26 +27,27 @@ public class TemplatesHelper {
 		this.name = name;
 	}
 	
-	
-	public String generateOutput() throws IOException {
-		return this.getContentTemplate();
+	public String generateOutput(String inputs) throws IOException {
+		
+		//get content undigest on template
+		String undig_content = this.getContentTemplate();
+		if(undig_content == null) {
+			return "";
+		}
+		
+		Map<String, String> mapInputs = parser.StringJsonToMap(inputs);
+    	String content =  parser.processTags(undig_content,mapInputs );
+		return content;
 	}
 	
 	public String getTagsByTemplate() throws IOException{
-		
-		
-		
 		String content = this.getContentTemplate();
-		
-		
 		return content;
-	
 	}
 	
 	private String getContentTemplate() throws IOException {
 		String file = path+name;
 		//System.out.println("reading template: "+file);
-		
 		File f = new File(file);
 		if(f.exists() && !f.isDirectory()) { 
 			String content =  new String(
@@ -54,9 +56,6 @@ public class TemplatesHelper {
 		}else {
 			return null;
 		}
-		
-		
 	}
-	
 	
 }

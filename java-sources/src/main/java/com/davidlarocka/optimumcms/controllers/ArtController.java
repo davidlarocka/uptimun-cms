@@ -25,7 +25,7 @@ public class ArtController {
 	FileService files;
 	
 	@GetMapping
-	public List<Art> getAllArts(){
+	public List<Art> getAllArts(){//TODO: remove 
 		return arts.findAll();
 	}
 	
@@ -33,7 +33,7 @@ public class ArtController {
 	public void newArt(@RequestBody Art art) throws IOException  {
 		//save on DB
 		art.setCreatedCurrentEpoch();
-		art.setTsCurrentEpoch();
+		art.setTsCurrentDate();
 		art.setUpdateCurrentEpoch();
 		arts.save(art);
 		

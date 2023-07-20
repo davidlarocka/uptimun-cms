@@ -1,6 +1,8 @@
 package com.davidlarocka.optimumcms.models;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,29 +24,78 @@ public class Art {
 	private long ts;
 	private long created_at;
 	private long updated_at;
-	
 	private String file;
-	private String furl;
 	private String type_url;
-	
-	private String inputs;
+	private String inputs;//here the templates tags
 	
    
     public void setCreatedCurrentEpoch() {
-        this.created_at = Instant.now().getEpochSecond() ;
+        this.setCreated_at(Instant.now().getEpochSecond()) ;
     }
     
     public void setUpdateCurrentEpoch() {
-        this.updated_at = Instant.now().getEpochSecond() ;
+        this.setUpdated_at(Instant.now().getEpochSecond()) ;
     }
     
     public void setTsCurrentEpoch() {
         this.ts = Instant.now().getEpochSecond() ;
     }
     
+    public void setTsCurrentDate() {
+    	this.ts = Long.parseLong(DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())) ;
+    }
+    
     public long getTs() {
     	return ts;
     }
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public long getCreated_at() {
+		return created_at;
+	}
+
+	public void setCreated_at(long created_at) {
+		this.created_at = created_at;
+	}
+
+	public long getUpdated_at() {
+		return updated_at;
+	}
+
+	public void setUpdated_at(long updated_at) {
+		this.updated_at = updated_at;
+	}
+
+	public String getFile() {
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	public String getType_url() {
+		return type_url;
+	}
+
+	public void setType_url(String type_url) {
+		this.type_url = type_url;
+	}
+
+	public String getInputs() {
+		return inputs;
+	}
+
+	public void setInputs(String inputs) {
+		this.inputs = inputs;
+	}
 
 	
 }
