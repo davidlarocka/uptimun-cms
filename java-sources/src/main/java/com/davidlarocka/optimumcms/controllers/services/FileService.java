@@ -6,9 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import javax.swing.text.Document;
-
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -70,7 +69,7 @@ public class FileService {
 					//generate output
 					FileWriter output_file = new FileWriter(site_art + k  +"/"+ ts + "."+ v);
 					if(v.equals("html")) {
-						Document doc = (Document) Jsoup.parse(content);
+						Document doc = Jsoup.parse(content);
 						content = doc.toString();
 					}
 					output_file.write(content);
@@ -80,15 +79,12 @@ public class FileService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-        	
         });
-		
 	}
     
     private String EntityToStringJson(Art ent) throws JsonProcessingException {
 		 ObjectMapper mapper = new ObjectMapper();  
 		 return mapper.writeValueAsString(ent);
-		
 	}
 	
 }

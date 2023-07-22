@@ -42,7 +42,7 @@ public class Art {
     }
     
     public void setTsCurrentDate() {
-    	this.ts = Long.parseLong(DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())) ;
+    	this.ts = 202307221;//Long.parseLong(DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())) ;
     }
     
     public long getTs() {
