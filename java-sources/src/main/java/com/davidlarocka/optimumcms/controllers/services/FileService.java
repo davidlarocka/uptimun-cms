@@ -58,7 +58,7 @@ public class FileService {
     	map.forEach((k, v) -> {
     		try {
 				Files.createDirectories(Paths.get(site_art+k));
-				System.out.println("creating output arts:"+site_art + k  + "/"+ ts + "."+ v);
+				//System.out.println("creating output arts:"+site_art + k  + "/"+ ts + "."+ v);
 				//Get templates tags for type to make outputs
 				template.setName("general."+v);//TODO: buscar nombre de template de tipo de arts
 				template.setPath(path_templates+k+"/");

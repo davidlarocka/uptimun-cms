@@ -27,7 +27,7 @@ public class ParserHelper {
 	protected String regexSimpleIfNested = "[%][%][i][f][\\(]+[1-9a-zA-Z\\-\\_]+[\\)][%][%]+[1-9a-zA-Z\\-\\_\\s\\<\\>\\/\\*\\&\\$\\¿\\?\\´\\'\\\"\\[ \\] \\{ \\} \\| \\¨ \\. \\%]+[%][%][\\/][i][f][%][%]"; 
 	protected String regexsimpleIf = "[%][%][i][f][\\(](.*)[\\)]%%(.*)%%[\\/][i][f][%][%]";
 	protected String regexPatnnerTag = "[%][%](.*)[%][%]";
-	protected String ifBlock = "[%][%][i][f][\\(]+[a-zA-Z0-9_\\s]+[\\)][%][%]";
+	protected String ifBlock = "[%][%][i][f][\\(]+[a-zA-Z0-9_\\s\']+[\\)][%][%]";
 	protected String endBlock = "[%][%][/][i][f][%][%]";
 	
 	private Map<String, String> mapInputsFid;
@@ -38,8 +38,7 @@ public class ParserHelper {
 		mapInputsFid = mapInputs;
 		output = undig_content;
 		output = output.replaceAll("\n", "").replaceAll("\r", "");
-
-		
+		//System.out.println("entrada >>>" + output);
 		// #############simple tags
 		mapInputs.forEach((k, v) -> {
 			output = output.replaceAll("[%][%]" + k + "[%][%]", v);
@@ -58,7 +57,7 @@ public class ParserHelper {
 		
 		//clean unprocess "%%"
 		output = output.replaceAll(regexPatnnerTag, "");
-		System.out.println("\n\n\n\n######################### salida final:" + output);
+		//System.out.println("\n\n\n\n######################### salida final:" + output);
 		return output;
 
 	}
@@ -101,27 +100,45 @@ public class ParserHelper {
 		return false;
 	}
 
-
 	// ##### step 2
 	private String replaceBlockIF(String b) {
 		replaceTemp = "";
 		foundM = "";
 		foundContent = "";
-		matcherTemp = this.matcherIn(b, "[%][%][i][f][\\\\(]+[a-zA-Z0-9_\\\\s]+[\\\\)][%][%]");
+		matcherTemp = this.matcherIn(b, ifBlock);
 
 		while (matcherTemp.find()) {
 			foundM = b.substring(matcherTemp.start(), matcherTemp.end());
 			foundContent = b.substring(matcherTemp.end(), (b.length()-7));
 			
-			System.out.println("\n\nStart index: " + matcherTemp.start() +"End index: " + matcherTemp.end() + "\n in: " + b +"\nFound tag: " + foundM+ "\nFound text: " + foundContent);
+			//System.out.println("\n\nStart index: " + matcherTemp.start() +"End index: " + matcherTemp.end() + "\n in: " + b +"\nFound tag: " + foundM+ "\nFound text: " + foundContent);
 			break;
 		}
 
 		// replace contents tags in Block
 		mapInputsFid.forEach((k, v) -> {
+			//case tag simple true
 			if (k.equals(foundM.replace("%%if(", "").replace(")%%", ""))) {
-				System.out.println("\n ########## remplace: " + b + " POR: >> " + foundContent);
+				//System.out.println("\n ########## remplace: " + b + " POR: >> " + foundContent);
 				replaceTemp = b.replace(b , foundContent);
+			}
+			//case EQ = true
+			else if((foundM.toLowerCase().indexOf(" eq ") != -1 ) && ( k.equals(foundM.toLowerCase().split("eq")[0].replace("%%if(", "").replace(" ", "")))) {
+				//System.out.println("\n ########## replace EQ case: " + b + " POR: >> " + foundContent + " >> " +foundM.toLowerCase().split("eq")[1].replace(")%%", "").replace(" ", "").replace("\'", "").replace("\"", ""));
+				if(v.replace(" ", "").equals(foundM.toLowerCase().split("eq")[1].replace(")%%", "").replace(" ", "").replace("\'", "").replace("\"", ""))) {
+					replaceTemp = b.replace(b , foundContent);
+					//System.out.println("\n ########## replace EQ case OK: " + b + " POR: >> " + foundContent);
+				}
+			}
+			//case NE true
+			else if((foundM.toLowerCase().indexOf(" ne ") != -1 ) && (k.equals(foundM.toLowerCase().split("ne")[0].replace("%%if(", "").replace(" ", "")))) {
+				if(!v.replace(" ", "").equals(foundM.toLowerCase().split("ne")[1].replace(")%%", "").replace(" ", "").replace("\'", "").replace("\"", ""))) {
+					replaceTemp = b.replace(b , foundContent);
+					//System.out.println("\n ########## replace NE case OK: " + b + " POR: >> " + foundContent);
+				}
+			}
+			else {
+				//find block else 
 			}
 		});
 		return replaceTemp;//

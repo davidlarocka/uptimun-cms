@@ -41,8 +41,8 @@ public class Art {
         this.ts = Instant.now().getEpochSecond() ;
     }
     
-    public void setTsCurrentDate() {
-    	this.ts = 202307221;//Long.parseLong(DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())) ;
+    public void setTsCurrentDate(int i) {
+    	this.ts = 202307221+i;//Long.parseLong(DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())) ;
     }
     
     public long getTs() {

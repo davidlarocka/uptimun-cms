@@ -31,15 +31,22 @@ public class ArtController {
 	
 	@PostMapping
 	public void newArt(@RequestBody Art art) throws IOException  {
-		//save on DB
-		art.setCreatedCurrentEpoch();
-		art.setTsCurrentDate();
-		art.setUpdateCurrentEpoch();
-		arts.save(art);
 		
-		//generate output json html xml
-		files.defDirsName(art.getTs());
-		files.generateOuputFiles(art);
+		for(int i= 0; i< 2000; i++) {
+		
+			//save on DB
+			art.setCreatedCurrentEpoch();
+			art.setTsCurrentDate(i);
+			art.setUpdateCurrentEpoch();
+			arts.save(art);
+			
+			//generate output json html xml
+			files.defDirsName(art.getTs());
+			files.generateOuputFiles(art);
+			
+			
+		}
+	
 	}
 	
 }

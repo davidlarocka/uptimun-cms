@@ -1,16 +1,82 @@
-<!DOCTYPE html>
+
 <html>
-    <head>
+  <head>
+      <meta >
+      <meta >
+      <meta >
+      <meta >
+  </head>
+  <body> 
+    <h1>%%if(anidado1)%%%%anidado1%% %%/if%% %%nombre____proyecto%% | Inicio</h1>
 
-    </head>
-    <body>
-        Hola optimum: %%marca_custom%%
-        <br/>
-        %%nombre_proyecto%%
+    <div>
+      %%if(nombre____proyecto)%%  %%nombre____proyecto%%  %%if(anidado1)%%     ddsafdsfas   %%if(nombre____proyecto)%% aqui va un if %%/if%%    %%/if%%%%/if%%
+abc123DEF
+    </div>
+    <div>
 
-        %%if(nombre_proyecto)%%
-            aqui va un bloque if
+      %%if(link1)%%<a href="/test">was</a>%%/if%%
+      %%if(link1)%%<a href="/test">%%link1%%</a>%%/if%%
+
+
+      %%if(_test)%%  bloque 1 <br>
+        %%if(_test)%% bloque 2 <br>
+          %%if(_test)%% bloque 3 <br>
+              %%if(_test)%%blocke if de 4 niveles <br>%%_test%% %%/if%%
+          %%/if%%
         %%/if%%
-    </body>
+      %%/if%%
+    </div>
+
+    <a href="#">Link 1</a>
+    <a href="/test">Link 2</a>
+    <a href="www.google.com">Link 3</a>
+    my link: %%link1%%
+  
+
+    %%if(_test)%%  bloque 1 <br>
+    %%if(_test)%% bloque 2 <br>
+      %%if(_test)%% bloque 3 <br>
+          %%if(_test)%%
+          block 4
+          %%_test%% 
+          
+          %%if(_test)%%  bloque 5<br>
+            %%if(_test)%% bloque 6 <br>
+              %%if(_test)%% bloque 7????¿¿¿!!! <br>
+                  %%if(_test)%%blocke if de 8 niveles <br>%%_test%% %%/if%%
+              %%/if%%
+            %%/if%%
+          %%/if%%
+          
+          
+          
+          %%/if%%
+      %%/if%%
+    %%/if%%
+  %%/if%%
+
+
+    %%if(anidado1 eq 'jajaja')%%
+      caso eq activo jajaja
+    %%/if%%
+
+    %%if(anidado1 eq 'jojojo')%%
+      caso eq activo jojojo
+    %%/if%%
+
+    %%if(anidado1 ne 'jojojo')%%
+      caso ne activo no es jojojo es %%anidado1%%
+    %%/if%%
+
+    
+
+  </body>
 </html>
+
+
+
+
+
+
 
