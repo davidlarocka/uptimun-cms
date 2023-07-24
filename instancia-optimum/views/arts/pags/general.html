@@ -19,7 +19,7 @@ abc123DEF
       %%if(link1)%%<a href="/test">%%link1%%</a>%%/if%%
 
 
-      %%if(_test)%%  bloque 1 <br>
+      %%if(_test1)%%  bloque 1 <br>
         %%if(_test)%% bloque 2 <br>
           %%if(_test)%% bloque 3 <br>
               %%if(_test)%%blocke if de 4 niveles <br>%%_test%% %%/if%%
@@ -34,7 +34,7 @@ abc123DEF
     my link: %%link1%%
   
 
-    %%if(_test)%%  bloque 1 <br>
+    %%if(_test1)%%  bloque 1 <br>
     %%if(_test)%% bloque 2 <br>
       %%if(_test)%% bloque 3 <br>
           %%if(_test)%%
@@ -69,7 +69,61 @@ abc123DEF
       caso ne activo no es jojojo es %%anidado1%%
     %%/if%%
 
+    %%if(anidado1 eq 'jajaja')%%
+        este es el caso if %%anidado1%%
+    %%else%%
+        este es el caso else %%anidado1%%
+    %%/if%%
     
+
+
+
+
+    %%if(anidado1 ne 'jojojo')%%
+      caso ne activo no es jojojo es %%anidado1%%
+    
+    %%else%%
+      <br/>  
+      por ultimo si equivale a %%anidado1%%
+    %%/if%%
+
+   %%nif(anidado1)%%
+    no exite anidado1
+  
+  %%else%%
+    si existe anidado1
+  %%/nif%%
+
+   %%if(numero == 1)%%
+       es %%numero%%
+   %%else%%
+      no es %%numero%%
+   %%/if%%
+   
+   <br>
+   <br>
+   %%if(numero >= 1)%%
+       %%numero%% es mayor o igual a 1
+   %%else%%
+     %%numero%% no es mayor o igual a 1
+   %%/if%%
+
+
+   %%if(numero >= 3)%%
+    %%numero%% es mayor o igual a 3
+   %%/if%%
+
+   %%if(numero > 3)%%
+    %%numero%% es mayor a 3
+   %%/if%%
+
+   %%if(numero <= 1)%%
+    %%numero%% es menor o igual a 1
+   %%/if%%
+
+   %%if(numero < 1)%%
+    %%numero%% es menor a 1
+   %%/if%%
 
   </body>
 </html>

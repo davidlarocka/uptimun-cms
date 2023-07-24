@@ -32,20 +32,16 @@ public class ArtController {
 	@PostMapping
 	public void newArt(@RequestBody Art art) throws IOException  {
 		
-		for(int i= 0; i< 2000; i++) {
-		
+			int i = 0;
 			//save on DB
 			art.setCreatedCurrentEpoch();
-			art.setTsCurrentDate(i);
+			art.setTsCurrentDate();
 			art.setUpdateCurrentEpoch();
 			arts.save(art);
 			
 			//generate output json html xml
 			files.defDirsName(art.getTs());
 			files.generateOuputFiles(art);
-			
-			
-		}
 	
 	}
 	
