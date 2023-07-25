@@ -14,6 +14,7 @@ public class TemplatesHelper {
 	
 	private String name;
 	private String path;
+	private String pathMacros;
 	Map<String, String> MapTemplateTags;
 	
 	@Autowired
@@ -21,6 +22,10 @@ public class TemplatesHelper {
 	
 	public void setPath(String path) {
 		this.path = path;
+	}
+	
+	public void setPathMacros(String pathMacros) {
+		this.pathMacros = pathMacros;
 	}
 	
 	public void setName(String name) {
@@ -34,10 +39,13 @@ public class TemplatesHelper {
 		if(undig_content == null) {
 			return "";
 		}
+		undig_content = this.getContentMacros(undig_content);
 		
+		//get macros content
+		
+		//process tags 
 		Map<String, String> mapInputs = parser.StringJsonToMap(inputs);
-    	String content =  parser.processTags(undig_content,mapInputs );
-		return content;
+    	return  parser.processTags(undig_content,mapInputs );
 	}
 	
 	public String getTagsByTemplate() throws IOException{
@@ -56,6 +64,10 @@ public class TemplatesHelper {
 		}else {
 			return null;
 		}
+	}
+	
+	public String getContentMacros(String content_template) throws IOException {
+		return parser.getMacros(content_template,pathMacros);
 	}
 	
 }

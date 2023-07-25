@@ -125,6 +125,19 @@ abc123DEF
     %%numero%% es menor a 1
    %%/if%%
 
+
+   %%if(numero = 1)%%
+    con un solo = 
+   %%/if%%
+
+   <br/>
+   %%macro(macro_vista.html)%%
+   %%macro(macro_vista.html)%%
+   <br/>
+   %%_loop_artic(1,5)%%<br/> Esto es un loop ##i##  %%nombre____proyecto%%
+      %%_loop_artic(1,7)%% <br> - ##i##.##j## Esto es un mini lop dentro ##i##.##j##   %%_loop_artic(1,3)%%<br/> -- ##i##.##j## ##m## Capitulo ##m##   %%/_loop_artic%%  %%/_loop_artic%%
+   %%/_loop_artic%%
+
   </body>
 </html>
 

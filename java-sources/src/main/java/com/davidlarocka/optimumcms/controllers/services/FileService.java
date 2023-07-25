@@ -62,6 +62,7 @@ public class FileService {
 				//Get templates tags for type to make outputs
 				template.setName("general."+v);//TODO: buscar nombre de template de tipo de arts
 				template.setPath(path_templates+k+"/");
+				template.setPathMacros(path_templates);
 				//replace tags for content
 				String content = template.generateOutput(art.getInputs());
 				//only generate if template isn't empty and template exist = true

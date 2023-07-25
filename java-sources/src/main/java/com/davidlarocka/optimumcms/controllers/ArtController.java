@@ -32,7 +32,6 @@ public class ArtController {
 	@PostMapping
 	public void newArt(@RequestBody Art art) throws IOException  {
 		
-			int i = 0;
 			//save on DB
 			art.setCreatedCurrentEpoch();
 			art.setTsCurrentDate();
