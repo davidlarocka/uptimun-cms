@@ -60,7 +60,7 @@ public class FileService {
 				Files.createDirectories(Paths.get(site_art+k));
 				//System.out.println("creating output arts:"+site_art + k  + "/"+ ts + "."+ v);
 				//Get templates tags for type to make outputs
-				template.setName("general."+v);//TODO: buscar nombre de template de tipo de arts
+				template.setName(art.getType_art() + "." +v);//v eq to extension. example general.html
 				template.setPath(path_templates+k+"/");
 				template.setPathMacros(path_templates);
 				//replace tags for content

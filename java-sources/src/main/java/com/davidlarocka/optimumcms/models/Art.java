@@ -1,6 +1,10 @@
 package com.davidlarocka.optimumcms.models;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +26,9 @@ public class Art {
 	private long created_at;
 	private long updated_at;
 	private String file;
+	private String type_art;
 	private String type_url;
+	private String url;
 	private String inputs;//here the templates tags
 	
    
@@ -39,7 +45,7 @@ public class Art {
     }
     
     public void setTsCurrentDate() {
-    	this.ts = 202307241;//Long.parseLong(DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())) ;
+    	this.ts = Long.parseLong(DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())) ;
     }
     
     public long getTs() {
@@ -87,11 +93,24 @@ public class Art {
 	}
 
 	public String getInputs() {
-		return inputs;
+		return this.getInfoArt()  + inputs.substring(1);
 	}
+	
 
 	public void setInputs(String inputs) {
 		this.inputs = inputs;
+	}
+
+	public String getType_art() {
+		return type_art;
+	}
+
+	public void setType_art(String type_art) {
+		this.type_art = type_art;
+	}
+	
+	private String getInfoArt() {
+		return "{\"_title\": \""+title+" \" , \"_datep\": \""+ String.valueOf(created_at) +" \" ,"; //TODO ADD reserved tags from class
 	}
 
 	

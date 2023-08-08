@@ -55,7 +55,7 @@ public class ParserHelper {
 		// #############simple tags
 		mapInputs.forEach((k, v) -> {
 			output = output.replaceAll("[%][%]" + k + "[%][%]", v);
-			// System.out.println("%%" + k + "%%" + v);
+			//System.out.println("%%" + k + "%%" + v);
 		});
 
 		findMore = true;
