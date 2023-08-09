@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,30 +22,59 @@ public class ArtController {
 
 	@Autowired
 	ArtInterface arts;
-	
+
 	@Autowired
 	FileService files;
-	
+
 	@GetMapping
-	public List<Art> getAllArts(){//TODO: remove 
+	public List<Art> getAllArts() {
 		return arts.findAll();
 	}
-	
+
 	@PostMapping
-	public void newArt(@RequestBody Art art) throws IOException  {
-		
-			//save on DB
+	public HttpStatus saveArt(@RequestBody Art savedArt) throws IOException {
+		Art art = null;
+		if (savedArt.getId() != null) {// update art
+			if (arts.existsById(savedArt.getId())) {
+				art = arts.getReferenceById(savedArt.getId());
+				art.setTitle(savedArt.getTitle());
+				art.setFile_url(savedArt.getFile_url());
+				art.setUrl(savedArt.getUrl());
+				art.setUpdateCurrentEpoch();
+				art.setPublished(savedArt.isPublished());
+				art.setInputs(savedArt.getInputs());
+			} else {
+				return HttpStatus.NOT_FOUND;
+			}
+
+		} else {// new art
+			art = savedArt;
 			art.setCreatedCurrentEpoch();
 			art.setTsCurrentDate();
 			art.setUpdateCurrentEpoch();
-			arts.save(art);
-			
-			//generate output json html xml
-			files.defDirsName(art.getTs());
-			files.generateOuputFiles(art);
-	
+		}
+		// save on DB
+		arts.save(art);
+		// generate output json html xml
+		files.defDirsName(art.getTs());
+		files.generateOuputFiles(art);
+		return HttpStatus.OK;
 	}
 	
+	@DeleteMapping
+	public HttpStatus deleteArt(@RequestBody Art deletedArt) throws IOException {
+		Art art = null;
+		if (arts.existsById(deletedArt.getId())) {
+			art = arts.getReferenceById(deletedArt.getId());
+			art.setPublished(false);
+		} else {
+			return HttpStatus.NOT_FOUND;
+		}
+		
+		files.defDirsName(art.getTs());
+		files.generateOuputFiles(art);
+		arts.delete(deletedArt);
+		return HttpStatus.OK;
+	}
+
 }
-
-
