@@ -4,5 +4,8 @@
 /home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/helpers/lang/LangHelper.java
 /home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/helpers/ParserHelper.java
 /home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/controllers/services/FileService.java
+/home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/models/Landing.java
 /home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/interfaces/ArtInterface.java
+/home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/interfaces/LandingInterface.java
 /home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/helpers/TemplatesHelper.java
+/home/dgarciagonzalez/spring/optimum-cms/java-sources/src/main/java/com/davidlarocka/optimumcms/controllers/LandingController.java
