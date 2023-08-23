@@ -1,15 +1,34 @@
-
-<html>
-  <head>
-      <title>%%_name%%</title>
-  </head>
-  <body> 
-    %%_area1(Artículos de inicio, type_galeria, 2)%%
-    <h1>%%_test1%%</h1>
-    %%/_area%%
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Galeria</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <!--#include virtual="/site/artic/20230823/data/20230823011449.json" -->
+   <!--#echo var="DATE_LOCAL" -->
+    <div class="jumbotron text-center">
+        %%_area2(Artículos de inicio, type_galeria, 2)%%
+        <h1>%%_titular%%</h1>
+        <p>%%_test1%%</p>
+        %%/_area%%
+        </div>
+        <div class="container">
+          %%_area1(Artículos de inicio, type_galeria, 2)%%
+            <h3>%%_test1%%</h3>
+            <div class="row">
+                <div class="col-sm-8">
+                    <p> %%_test1%% en %%_datep%% %%if(_autor)%%%%_autor%%%%/if%% </p>
+                </div>
+            </div>
+          %%/_area%%
+    </div>
+</body>
 </html>
-
 
 
 

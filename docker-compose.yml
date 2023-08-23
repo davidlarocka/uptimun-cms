@@ -40,7 +40,9 @@ services:
       - 8082:8080
   #servidor web para output site. publico    
   apache:
-    image: httpd:2.4.57-alpine3.18
+    image: img-optimum-server-web
+    build:
+      context: ./httpd
     container_name: optimum-server-web
     ports:
     - '80:80'

@@ -35,12 +35,22 @@ public class TemplatesHelper {
 	public String generateOutputLanding(String areas) throws IOException {
 		// get content undigest on template
 		String undig_content = this.getContentTemplate();
+		System.out.println("Areas: "+ areas);
+		
 		if (undig_content == null) {
 			return "";
 		}
+		
+		//System.out.println("content template: "+ undig_content);
 		undig_content = this.getContentMacros(undig_content);
-		return undig_content;//TODO: process content
+		//find areas
+		String processed = parser.replaceAreasForArtsInfo(areas, undig_content);
+		
+		
+		return processed;//TODO: process content
 	}
+	
+
 
 	public String generateOutput(String inputs) throws IOException {
 
@@ -65,7 +75,7 @@ public class TemplatesHelper {
 
 	private String getContentTemplate() throws IOException {
 		String file = path + name;
-		// System.out.println("reading template: "+file);
+		System.out.println("reading template: "+file);
 		File f = new File(file);
 		if (f.exists() && !f.isDirectory()) {
 			String content = new String(Files.readAllBytes(Paths.get(file)));

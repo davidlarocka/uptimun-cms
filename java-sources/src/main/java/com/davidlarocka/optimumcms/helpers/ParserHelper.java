@@ -24,6 +24,9 @@ public class ParserHelper {
 	@Autowired
 	LangHelper langs;
 	private String output;
+	private String outputTemplate;
+	private String unprocessedArea;
+	private String undig;
 	private Matcher matcherTemp;
 	private String replaceTemp;
 	private String foundM;
@@ -36,7 +39,8 @@ public class ParserHelper {
 	protected String loopArtic = "[%][%]_loop_artic\\([0-9\\s][,][0-9\\s][\\)][%][%]";
 	protected String endloopArtic = "[%][%][/]_loop_artic[%][%]";
 	protected String macros = "[%][%]macro[\\(]+[a-zA-Z0-9_\\s\\'\\=\\>\\<\\.]+[\\)][%][%]";
-
+	protected String areas = "[%][%]_area[\\(]+[a-zA-Z0-9_\\s\\'\\=\\>\\<\\.\\,\\á\\é\\í\\ó\\ú\\Á\\É\\Í\\Ó\\Ú]+[\\)][%][%]";
+	protected String endAreas = "[%][%][/]_area[%][%]";
 	private Map<String, String> mapInputsFid;
 
 	// step 0
@@ -45,7 +49,6 @@ public class ParserHelper {
 		mapInputsFid = mapInputs;
 		output = undig_content;
 		output = output.replaceAll("\n", "").replaceAll("\r", "");
-		//System.out.println("entrada >>>" + output);
 
 		// loops tags
 		while (findMore) {
@@ -70,8 +73,8 @@ public class ParserHelper {
 		// System.out.println("\n\n\n\n######################### salida final antes de
 		// limpiar: " + output);
 		output = output.replaceAll(regexPatnnerTag, "");
-		// System.out.println("\n\n\n\n######################### salida final:" +
-		// output);
+		//System.out.println("\n\n\n\n######################### salida final:" +
+		//output);
 		return output;
 
 	}
@@ -454,6 +457,101 @@ public class ParserHelper {
 		return replaceTemp;
 	}
 
+	
+	
+	private boolean findAreas(String in, String nameArea,  String ids_arts) throws IOException {
+		unprocessedArea = "";
+		
+		//System.out.println("\n\n\n\n######################### inicio areas: " + in+ " areas:" + areas);
+		// 1.1 buscar primer %%if%%
+		Matcher loopMatches = this.matcherIn(in, areas.replace("_area", nameArea));
+
+		while (loopMatches.find()) {
+			if (loopMatches.start() != 0) {
+				// catch block if
+				String textBlock = in.substring(loopMatches.start(), in.length());
+				// find first end
+				Matcher EndMatches = Pattern.compile(endAreas).matcher(textBlock);
+
+				List<Integer> startTagend = new ArrayList<Integer>();
+				List<Integer> endTagend = new ArrayList<Integer>();
+
+				while (EndMatches.find()) {
+					System.out.println("Tag end : "+EndMatches.start());
+					startTagend.add(EndMatches.start());
+					endTagend.add(EndMatches.end());
+				}
+
+				
+				String foundAreas = textBlock.substring(0, endTagend.get(0));
+				
+				//find closed end
+				//System.out.println("\n find in block: " + textBlock.substring(0,
+				//startTagend.get(0) ));
+				System.out.println("\n\n has area: " + foundAreas);
+				
+				//get info arts
+				
+				String [] ids =  ids_arts.split(",");
+				
+				for (String id : ids ) {
+					
+					String info_json = this.getContentJsonFile("/public/site/artic/" + id.subSequence(0, 8) +"/data/"+id+".json"); 
+					System.out.println("\n\n get info art  : in /public/site/artic/" + id.subSequence(0, 8) +"/data/"+id+".json");
+					//System.out.println("\n info :" + info_json );
+					if(info_json != null) {
+						Map<String, String> map = this.StringJsonToMap(info_json);
+						
+						//System.out.println("\n k: v: " + map.get("inputs"));
+						//System.out.println("\n antes by: " + outputTemplate);
+						this.processTags(foundAreas , this.StringJsonToMap(map.get("inputs")));
+						unprocessedArea = unprocessedArea.concat(output);
+					}
+					
+					
+				}
+				
+				
+				//System.out.println("\n replace by: " + unprocessedArea);
+				
+				unprocessedArea = unprocessedArea.replaceAll(areas.replace("_area", nameArea), "").replaceAll(endAreas, "");
+				outputTemplate = outputTemplate.replace(foundAreas, unprocessedArea );
+				undig = outputTemplate;
+				
+				return true;
+			}
+			break;
+		}
+		return false;
+	}
+	
+	public String replaceAreasForArtsInfo(String areas, String undig_content) throws IOException {
+		undig =  undig_content.replaceAll("\n", "").replaceAll("\r", "");
+		outputTemplate = undig_content;
+		//System.out.println("\n undigest: " + outputTemplate);
+		
+		Map<String, String> mapAreas = this.StringJsonToMap(areas);
+		mapAreas.forEach((k, v) -> {
+			try {
+				Boolean findMore = true;
+				while(findMore) {
+					findMore = this.findAreas(undig, k, v);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+			//System.out.println(" >>> " + k + " >>> " + v);
+		});
+		
+		//find area
+		
+		System.out.println("\n queda by: " + outputTemplate);
+		return outputTemplate;
+		
+	}
+	
+	
+	
 	private int stringToInt(String str) {
 		str = str.replaceAll("[a-zA-Z\\=]", "");
 		return Integer.parseInt(str);
@@ -481,6 +579,17 @@ public class ParserHelper {
 		@SuppressWarnings("unchecked")
 		Map<String, String> map = mapper.readValue(json, Map.class);
 		return map;
+	}
+	
+	private String getContentJsonFile(String file) throws IOException {
+		System.out.println("reading json: "+file);
+		File f = new File(file);
+		if (f.exists() && !f.isDirectory()) {
+			String content = new String(Files.readAllBytes(Paths.get(file)));
+			return content;
+		} else {
+			return null;
+		}
 	}
 
 }
