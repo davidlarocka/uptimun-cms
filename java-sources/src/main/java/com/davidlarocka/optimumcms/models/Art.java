@@ -32,7 +32,9 @@ public class Art {
 	private String file_url;
 	@Column(columnDefinition = "boolean default false")
 	private boolean published;
+	
 	@Lob
+	@Column( length = 100000 )
 	private String inputs;//here the templates tags
 	
 	public void setPublished(boolean published) {

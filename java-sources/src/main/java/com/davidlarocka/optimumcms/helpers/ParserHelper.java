@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.davidlarocka.optimumcms.helpers.lang.LangHelper;
@@ -41,7 +42,16 @@ public class ParserHelper {
 	protected String macros = "[%][%]macro[\\(]+[a-zA-Z0-9_\\s\\'\\=\\>\\<\\.]+[\\)][%][%]";
 	protected String areas = "[%][%]_area[\\(]+[a-zA-Z0-9_\\s\\'\\=\\>\\<\\.\\,\\á\\é\\í\\ó\\ú\\Á\\É\\Í\\Ó\\Ú]+[\\)][%][%]";
 	protected String endAreas = "[%][%][/]_area[%][%]";
+
 	private Map<String, String> mapInputsFid;
+
+	@Value("${optimum.site.art}")
+	private String site_art;
+
+	@Value("${optimum.site.art.webRoot}")
+	protected String webRoot;
+	protected String art_path;
+	protected String art_file;
 
 	// step 0
 	public String processTags(String undig_content, Map<String, String> mapInputs) {
@@ -57,9 +67,19 @@ public class ParserHelper {
 
 		// #############simple tags
 		mapInputs.forEach((k, v) -> {
-			output = output.replaceAll("[%][%]" + k + "[%][%]", v);
-			//System.out.println("%%" + k + "%%" + v);
+			File f = new File(art_file + k + ".html");
+			if (f.exists() && !f.isDirectory()) {
+				System.out.println("\n exite "+art_file + k + ".html");
+				output = output.replaceAll("[%][%]" + k + "[%][%]",
+						"<!--#include virtual='" + art_path + k + ".html' -->");// value is into file
+			} else {
+				System.out.println("\n no exite");
+				output = output.replaceAll("[%][%]" + k + "[%][%]", v);
+			}
+			// System.out.println("%%" + k + "%%" + v);
 		});
+		
+		art_path = "";
 
 		findMore = true;
 		// ############### conditional Tags
@@ -73,8 +93,8 @@ public class ParserHelper {
 		// System.out.println("\n\n\n\n######################### salida final antes de
 		// limpiar: " + output);
 		output = output.replaceAll(regexPatnnerTag, "");
-		//System.out.println("\n\n\n\n######################### salida final:" +
-		//output);
+		// System.out.println("\n\n\n\n######################### salida final:" +
+		// output);
 		return output;
 
 	}
@@ -92,24 +112,21 @@ public class ParserHelper {
 	}
 
 	private boolean findMacro(String in, String path) throws IOException {
-
-		//System.out.println("\n\n\n\n######################### inicio in: " + in);
 		Matcher macrosMatches = this.matcherIn(in, macros);
-
 		while (macrosMatches.find()) {
 			if (macrosMatches.start() != 0) {
 				// get content
 				String textBlock = in.substring(macrosMatches.start(), macrosMatches.end());
 				path = path + "macros/" + textBlock.replace(" ", "").replace("%%macro(", "").replace(")%%", "");
-				//System.out.println("\n\n\n\n###########Find content macro in: " + path);
+				// System.out.println("\n\n\n\n###########Find content macro in: " + path);
 				String macroContent = "macro: " + path + " Not found";
 				File f = new File(path);
 				if (f.exists() && !f.isDirectory()) {
 					macroContent = new String(Files.readAllBytes(Paths.get(path))).replaceAll("\n", "").replaceAll("\r",
 							"");
 				}
-				//System.out.println("\n macro: " + textBlock);
-				//System.out.println("\n replace by: " + macroContent);
+				// System.out.println("\n macro: " + textBlock);
+				// System.out.println("\n replace by: " + macroContent);
 				output = output.replace(textBlock, macroContent);
 				return true;
 			}
@@ -143,7 +160,6 @@ public class ParserHelper {
 				// count nro %%loop_artic beetwen textBlock and first end
 				int ocurrencies = ((int) this.matcherIn(textBlock.substring(0, startTagend.get(0)), loopArtic).results()
 						.count());
-
 				// find closed end
 				// System.out.println("\n\n find in block: " + textBlock.substring(0,
 				// startTagend.get(0) ) );
@@ -171,8 +187,9 @@ public class ParserHelper {
 		while (matcherTemp.find()) {
 			foundM = b.substring(matcherTemp.start(), matcherTemp.end());
 			foundContent = b.substring(matcherTemp.end(), (b.length() - 16)); // 16 is length of "%%/_loop_artic%%"
-			//System.out.println("\n\nStart index: " + matcherTemp.start() + "End index: " + matcherTemp.end() + "\n in: "
-			//		+ b + "\nFound tag: " + foundM + "\nFound text: " + foundContent);
+			// System.out.println("\n\nStart index: " + matcherTemp.start() + "End index: "
+			// + matcherTemp.end() + "\n in: "
+			// + b + "\nFound tag: " + foundM + "\nFound text: " + foundContent);
 			break;
 		}
 
@@ -189,7 +206,7 @@ public class ParserHelper {
 			i++;
 		} while (i <= e);
 
-		//System.out.println("\n\nStart replace loop by: " + replaceTemp);
+		// System.out.println("\n\nStart replace loop by: " + replaceTemp);
 		return replaceTemp;
 	}
 
@@ -457,13 +474,10 @@ public class ParserHelper {
 		return replaceTemp;
 	}
 
-	
-	
-	private boolean findAreas(String in, String nameArea,  String ids_arts) throws IOException {
+	private boolean findAreas(String in, String nameArea, String ids_arts) throws IOException {
 		unprocessedArea = "";
-		
-		//System.out.println("\n\n\n\n######################### inicio areas: " + in+ " areas:" + areas);
-		// 1.1 buscar primer %%if%%
+
+		// System.out.println("\n\n\n\n## inicio areas: " + in+ " areas:" + areas);
 		Matcher loopMatches = this.matcherIn(in, areas.replace("_area", nameArea));
 
 		while (loopMatches.find()) {
@@ -477,81 +491,78 @@ public class ParserHelper {
 				List<Integer> endTagend = new ArrayList<Integer>();
 
 				while (EndMatches.find()) {
-					System.out.println("Tag end : "+EndMatches.start());
+					System.out.println("Tag end : " + EndMatches.start());
 					startTagend.add(EndMatches.start());
 					endTagend.add(EndMatches.end());
 				}
 
-				
 				String foundAreas = textBlock.substring(0, endTagend.get(0));
-				
-				//find closed end
-				//System.out.println("\n find in block: " + textBlock.substring(0,
-				//startTagend.get(0) ));
-				System.out.println("\n\n has area: " + foundAreas);
-				
-				//get info arts
-				
-				String [] ids =  ids_arts.split(",");
-				
-				for (String id : ids ) {
-					
-					String info_json = this.getContentJsonFile("/public/site/artic/" + id.subSequence(0, 8) +"/data/"+id+".json"); 
-					System.out.println("\n\n get info art  : in /public/site/artic/" + id.subSequence(0, 8) +"/data/"+id+".json");
-					//System.out.println("\n info :" + info_json );
-					if(info_json != null) {
+				String[] ids = ids_arts.split(",");
+				// System.out.println("\n\n has area: " + foundAreas);
+
+				// get info arts
+				for (String ts : ids) {
+
+					String path = this.replaceTagForText(site_art, "_fechac", String.valueOf(ts).substring(0, 8));
+					path = path.concat(String.valueOf(ts + "/"));
+
+					// to parse includes info in tags template
+					String pathWebRoot = this.replaceTagForText(webRoot, "_fechac", String.valueOf(ts).substring(0, 8));
+					pathWebRoot = pathWebRoot.concat(String.valueOf(ts + "/"));
+
+					String info_json = this.getContentJsonFile(path + "/data/" + ts + ".json");
+					if (info_json != null) {
 						Map<String, String> map = this.StringJsonToMap(info_json);
-						
-						//System.out.println("\n k: v: " + map.get("inputs"));
-						//System.out.println("\n antes by: " + outputTemplate);
-						this.processTags(foundAreas , this.StringJsonToMap(map.get("inputs")));
-						unprocessedArea = unprocessedArea.concat(output);
+
+						String published = String.valueOf(map.get("published"));
+
+						// System.out.println("\n antes by: " + outputTemplate);
+						if (published.equals("true")) {
+							this.art_path = pathWebRoot + "data/";
+							this.art_file = path + "data/";
+							this.processTags(foundAreas, this.StringJsonToMap(map.get("allInfo")));
+							unprocessedArea = unprocessedArea.concat(output);
+						}
 					}
-					
-					
 				}
-				
-				
-				//System.out.println("\n replace by: " + unprocessedArea);
-				
-				unprocessedArea = unprocessedArea.replaceAll(areas.replace("_area", nameArea), "").replaceAll(endAreas, "");
-				outputTemplate = outputTemplate.replace(foundAreas, unprocessedArea );
+
+				unprocessedArea = unprocessedArea.replaceAll(areas.replace("_area", nameArea), "").replaceAll(endAreas,
+						"");
+				outputTemplate = outputTemplate.replace(foundAreas, unprocessedArea);
 				undig = outputTemplate;
-				
+
 				return true;
 			}
 			break;
 		}
 		return false;
 	}
-	
+
 	public String replaceAreasForArtsInfo(String areas, String undig_content) throws IOException {
-		undig =  undig_content.replaceAll("\n", "").replaceAll("\r", "");
+		undig = undig_content.replaceAll("\n", "").replaceAll("\r", "");
 		outputTemplate = undig_content;
-		//System.out.println("\n undigest: " + outputTemplate);
-		
+		// System.out.println("\n undigest: " + outputTemplate);
+
 		Map<String, String> mapAreas = this.StringJsonToMap(areas);
 		mapAreas.forEach((k, v) -> {
 			try {
 				Boolean findMore = true;
-				while(findMore) {
+				while (findMore) {
 					findMore = this.findAreas(undig, k, v);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-			} 
-			//System.out.println(" >>> " + k + " >>> " + v);
+			}
+			// System.out.println(" >>> " + k + " >>> " + v);
 		});
-		
-		//find area
-		
+
+		// find area
+
 		System.out.println("\n queda by: " + outputTemplate);
 		return outputTemplate;
-		
+
 	}
-	
-	
-	
+
 	private int stringToInt(String str) {
 		str = str.replaceAll("[a-zA-Z\\=]", "");
 		return Integer.parseInt(str);
@@ -580,9 +591,9 @@ public class ParserHelper {
 		Map<String, String> map = mapper.readValue(json, Map.class);
 		return map;
 	}
-	
+
 	private String getContentJsonFile(String file) throws IOException {
-		System.out.println("reading json: "+file);
+		System.out.println("reading json: " + file);
 		File f = new File(file);
 		if (f.exists() && !f.isDirectory()) {
 			String content = new String(Files.readAllBytes(Paths.get(file)));
@@ -590,6 +601,22 @@ public class ParserHelper {
 		} else {
 			return null;
 		}
+	}
+
+	public String getDir_data() {
+		return site_art;
+	}
+
+	public void setDir_data(String site_art) {
+		this.site_art = site_art;
+	}
+
+	public String getArt_path() {
+		return art_path;
+	}
+
+	public void setArt_path(String art_path) {
+		this.art_path = art_path;
 	}
 
 }

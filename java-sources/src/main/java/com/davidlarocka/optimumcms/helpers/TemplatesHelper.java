@@ -15,6 +15,7 @@ public class TemplatesHelper {
 	private String name;
 	private String path;
 	private String pathMacros;
+	private long ts;
 	Map<String, String> MapTemplateTags;
 
 	@Autowired
@@ -45,12 +46,10 @@ public class TemplatesHelper {
 		undig_content = this.getContentMacros(undig_content);
 		//find areas
 		String processed = parser.replaceAreasForArtsInfo(areas, undig_content);
-		
-		
-		return processed;//TODO: process content
+	
+		return processed;
 	}
 	
-
 
 	public String generateOutput(String inputs) throws IOException {
 
@@ -87,6 +86,14 @@ public class TemplatesHelper {
 
 	public String getContentMacros(String content_template) throws IOException {
 		return parser.getMacros(content_template, pathMacros);
+	}
+
+	public long getTs() {
+		return ts;
+	}
+
+	public void setTs(long k) {
+		this.ts = k;
 	}
 
 }

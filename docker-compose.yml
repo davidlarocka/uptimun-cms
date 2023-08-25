@@ -23,7 +23,7 @@ services:
     depends_on:
     - mysql-optimum-db
     volumes:
-      - containers_site_public:/public
+      - ./public:/public
       - ./instancia-optimum/:/$OPTIMUM_NAME/
     environment:
       - DATABASE_URL=jdbc:mysql://mysql-optimum-db:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?useSSL=false
@@ -47,12 +47,13 @@ services:
     ports:
     - '80:80'
     volumes:  
-    - containers_site_public:/usr/local/apache2/htdocs       
+    - ./public:/usr/local/apache2/htdocs    
 volumes:
   db:
   target:
   containers_site_public:
   instancia-optimum:
+  public:
     
       
   

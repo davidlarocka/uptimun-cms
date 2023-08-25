@@ -34,7 +34,7 @@ public class ArtController {
 	@PostMapping
 	public HttpStatus saveArt(@RequestBody Art savedArt) throws IOException {
 		Art art = null;
-		if (savedArt.getId() != null) {// update art
+		if (savedArt.getId() != null) {// UPDATE art
 			if (arts.existsById(savedArt.getId())) {
 				art = arts.getReferenceById(savedArt.getId());
 				art.setTitle(savedArt.getTitle());
@@ -43,15 +43,16 @@ public class ArtController {
 				art.setUpdateCurrentEpoch();
 				art.setPublished(savedArt.isPublished());
 				art.setInputs(savedArt.getInputs());
+				art.setFile_url(savedArt.getFile_url());
 			} else {
 				return HttpStatus.NOT_FOUND;
 			}
-
-		} else {// new art
+		} else {// NEW art
 			art = savedArt;
 			art.setCreatedCurrentEpoch();
 			art.setTsCurrentDate();
 			art.setUpdateCurrentEpoch();
+			art.setFile_url( files.generateUrlFileByTs(art.getTs()));
 		}
 		// save on DB
 		arts.save(art);

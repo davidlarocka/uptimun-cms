@@ -37,6 +37,9 @@ public class FileService {
 	@Value("${optimum.site.art}")
     private String site_art;
 	
+	@Value("${optimum.site.art.webRoot}")
+	protected String webRoot;
+	
 	@Value("${optimum.site.landing}")
     private String site_landing;
 	
@@ -85,10 +88,10 @@ public class FileService {
 					if(content != null ) {
 						//generate output
 						FileWriter output_file = new FileWriter(site_landing + k+"/"+landing.getTemplate());
-						if(v.equals("html")) {
+						/*if(v.equals("html")) {
 							Document doc = Jsoup.parse(content);
 							content = doc.toString();
-						}
+						}//TODO:validar para que no formatee html para parciales */
 						output_file.write(content);
 						output_file.close();
 					}
@@ -110,11 +113,11 @@ public class FileService {
     
     public void generateOuputFiles(Art art)  throws IOException {
     	
-    	site_art = parser.replaceTagForText(site_art, "_fechac", String.valueOf(ts).substring(0, 8));
+    	String path = parser.replaceTagForText(site_art, "_fechac", String.valueOf(ts).substring(0, 8));
     	
     	//Phersisting data in json
-    	Files.createDirectories(Paths.get(site_art+"data/"));
-		FileWriter output = new FileWriter(site_art+"data/"+ ts + ".json");
+    	Files.createDirectories(Paths.get(path+String.valueOf(ts)+"/data/"));
+		FileWriter output = new FileWriter(path+String.valueOf(ts)+"/data/"+ ts + ".json");
 		output.write(this.EntityToStringJson(art));
 		output.close();
     	
@@ -122,10 +125,12 @@ public class FileService {
 		if(art.isPublished()) {
 			Map<String, String> map = parser.StringJsonToMap(type_outputs);
 	    	map.forEach((k, v) -> {
+	    		
 	    		try {
-					Files.createDirectories(Paths.get(site_art+k));
-					//System.out.println("creating output arts:"+site_art + k  + "/"+ ts + "."+ v);
+					Files.createDirectories(Paths.get(path+String.valueOf(ts)+"/"+k));
+					System.out.println("creating output arts:"+path+String.valueOf(ts)+"/" + k  + "/"+ ts + "."+ v);
 					//Get templates tags for type to make outputs
+					template.setTs(ts);
 					template.setName(art.getType_art() + "." +v);//v eq to extension. example general.html
 					template.setPath(path_templates+k+"/");
 					template.setPathMacros(path_templates);
@@ -134,7 +139,7 @@ public class FileService {
 					//only generate if template isn't empty and template exist = true
 					if(content != null ) {
 						//generate output
-						FileWriter output_file = new FileWriter(site_art + k  +"/"+ ts + "."+ v);
+						FileWriter output_file = new FileWriter(path+String.valueOf(ts)+"/" + k  +"/"+ ts + "."+ v);
 						if(v.equals("html")) {
 							Document doc = Jsoup.parse(content);
 							content = doc.toString();
@@ -142,20 +147,41 @@ public class FileService {
 						output_file.write(content);
 						output_file.close();
 					}
-					//System.out.println("created arts:"+site_art + k  + "/"+ ts + "."+ v);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 	        });
+	    	
+	    	
+	    	//create output info for ssi by tag
+			map = parser.StringJsonToMap(art.getAllInfo());
+			map.forEach((k, v) -> {
+				FileWriter separateData;
+				try {
+					separateData = new FileWriter(path+String.valueOf(ts)+"/data/"+k+".html");
+					separateData.write(v);
+					separateData.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			});
+	    	
 		}else {
 			Map<String, String> map = parser.StringJsonToMap(type_outputs);
 			map.forEach((k, v) -> {
-				File file = new File(site_art + k  +"/"+ ts + "."+ v);
+				File file = new File(path+String.valueOf(ts)+"/" + k  +"/"+ ts + "."+ v);
 				file.delete();
 			});
 			
 		}
 	}
+    
+    public String generateUrlFileByTs(long ts) {
+    	String path = parser.replaceTagForText(webRoot, "_fechac", String.valueOf(ts).substring(0, 8));
+    	return path+ts+"/pags/"+ts+".html";
+    }
     
     private String EntityToStringJson(Art ent) throws JsonProcessingException {
 		 ObjectMapper mapper = new ObjectMapper();
