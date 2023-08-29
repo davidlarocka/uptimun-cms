@@ -1,0 +1,61 @@
+version: '3.9'
+
+services:
+  #servidor de DB
+  mysql-optimum-db:
+    image: mysql:5.7
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQLDB_DATABASE
+    ports:
+      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+    volumes:
+      - ./db:/var/lib/mysql
+  #servidor de servicio de artículos
+  optimum-art:
+    container_name: optimum-art
+    image: img-optimum-art:0.0.1
+    build: .
+    ports: 
+    - 8085:8080
+    depends_on:
+    - mysql-optimum-db
+    volumes:
+      - ./public:/public
+      - ./instancia-optimum/:/$OPTIMUM_NAME/
+    environment:
+      - DATABASE_URL=jdbc:mysql://mysql-optimum-db:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?useSSL=false
+      - DATABASE_USERNAME=root
+      - DATABASE_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+
+      - OPTIMUM_NAME=davidlarocka
+      - OPTIMUM_DOMAIN=davidlarocka.cl
+  #administrador de mysql SOLO para Desarrollo
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8080
+  #servidor web para output site. publico    
+  apache:
+    image: img-optimum-server-web
+    build:
+      context: ./httpd
+    container_name: optimum-server-web
+    ports:
+    - '80:80'
+    volumes:  
+    - ./public:/usr/local/apache2/htdocs    
+volumes:
+  db:
+  target:
+  containers_site_public:
+  instancia-optimum:
+  public:
+    
+      
+  
+      
+    

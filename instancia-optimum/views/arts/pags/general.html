@@ -1,0 +1,149 @@
+
+<html>
+  <head>
+      <meta >
+      <meta >
+      <meta >
+      <meta >
+  </head>
+  <body> 
+    <h1>%%if(anidado1)%%%%anidado1%% %%/if%% %%nombre____proyecto%% | Inicio</h1>
+
+    <div>
+      %%if(nombre____proyecto)%%  %%nombre____proyecto%%  %%if(anidado1)%%     ddsafdsfas   %%if(nombre____proyecto)%% aqui va un if %%/if%%    %%/if%%%%/if%%
+abc123DEF
+    </div>
+    <div>
+
+      %%if(link1)%%<a href="/test">was</a>%%/if%%
+      %%if(link1)%%<a href="/test">%%link1%%</a>%%/if%%
+
+
+      %%if(_test1)%%  bloque 1 <br>
+        %%if(_test)%% bloque 2 <br>
+          %%if(_test)%% bloque 3 <br>
+              %%if(_test)%%blocke if de 4 niveles <br>%%_test%% %%/if%%
+          %%/if%%
+        %%/if%%
+      %%/if%%
+    </div>
+
+    <a href="#">Link 1</a>
+    <a href="/test">Link 2</a>
+    <a href="www.google.com">Link 3</a>
+    my link: %%link1%%
+  
+
+    %%if(_test1)%%  bloque 1 <br>
+    %%if(_test)%% bloque 2 <br>
+      %%if(_test)%% bloque 3 <br>
+          %%if(_test)%%
+          block 4
+          %%_test%% 
+          
+          %%if(_test)%%  bloque 5<br>
+            %%if(_test)%% bloque 6 <br>
+              %%if(_test)%% bloque 7????¿¿¿!!! <br>
+                  %%if(_test)%%blocke if de 8 niveles <br>%%_test%% %%/if%%
+              %%/if%%
+            %%/if%%
+          %%/if%%
+          
+          
+          
+          %%/if%%
+      %%/if%%
+    %%/if%%
+  %%/if%%
+
+
+    %%if(anidado1 eq 'jajaja')%%
+      caso eq activo jajaja
+    %%/if%%
+
+    %%if(anidado1 eq 'jojojo')%%
+      caso eq activo jojojo
+    %%/if%%
+
+    %%if(anidado1 ne 'jojojo')%%
+      caso ne activo no es jojojo es %%anidado1%%
+    %%/if%%
+
+    %%if(anidado1 eq 'jajaja')%%
+        este es el caso if %%anidado1%%
+    %%else%%
+        este es el caso else %%anidado1%%
+    %%/if%%
+    
+
+
+
+
+    %%if(anidado1 ne 'jojojo')%%
+      caso ne activo no es jojojo es %%anidado1%%
+    
+    %%else%%
+      <br/>  
+      por ultimo si equivale a %%anidado1%%
+    %%/if%%
+
+   %%nif(anidado1)%%
+    no exite anidado1
+  
+  %%else%%
+    si existe anidado1
+  %%/nif%%
+
+   %%if(numero == 1)%%
+       es %%numero%%
+   %%else%%
+      no es %%numero%%
+   %%/if%%
+   
+   <br>
+   <br>
+   %%if(numero >= 1)%%
+       %%numero%% es mayor o igual a 1
+   %%else%%
+     %%numero%% no es mayor o igual a 1
+   %%/if%%
+
+
+   %%if(numero >= 3)%%
+    %%numero%% es mayor o igual a 3
+   %%/if%%
+
+   %%if(numero > 3)%%
+    %%numero%% es mayor a 3
+   %%/if%%
+
+   %%if(numero <= 1)%%
+    %%numero%% es menor o igual a 1
+   %%/if%%
+
+   %%if(numero < 1)%%
+    %%numero%% es menor a 1
+   %%/if%%
+
+
+   %%if(numero = 1)%%
+    con un solo = 
+   %%/if%%
+
+   <br/>
+   %%macro(macro_vista.html)%%
+   %%macro(macro_vista.html)%%
+   <br/>
+   %%_loop_artic(1,5)%%<br/> Esto es un loop ##i##  %%nombre____proyecto%%
+      %%_loop_artic(1,7)%% <br> - ##i##.##j## Esto es un mini lop dentro ##i##.##j##   %%_loop_artic(1,3)%%<br/> -- ##i##.##j## ##m## Capitulo ##m##   %%/_loop_artic%%  %%/_loop_artic%%
+   %%/_loop_artic%%
+
+  </body>
+</html>
+
+
+
+
+
+
+
