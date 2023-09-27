@@ -13,7 +13,7 @@ services:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
       - ./db:/var/lib/mysql
-  #servidor de servicio de artículos
+  #servidor del CORE cms
   optimum-art:
     container_name: optimum-art
     image: img-optimum-art:0.0.1

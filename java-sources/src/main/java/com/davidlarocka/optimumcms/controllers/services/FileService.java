@@ -81,7 +81,7 @@ public class FileService {
 					//Get templates tags for type to make outputs
 					template.setName(landing.getTemplate() );
 					template.setPath(path_templates_landings+view+"/"+k+"/");
-					template.setPathMacros(path_templates_landings+view+"/");
+					template.setPathMacros(path_templates_landings);
 					//replace tags for content
 					String content = template.generateOutputLanding(landing.getAreas());
 					//only generate if template isn't empty and template exist = true

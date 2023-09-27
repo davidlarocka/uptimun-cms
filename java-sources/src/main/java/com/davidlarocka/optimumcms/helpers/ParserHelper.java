@@ -32,14 +32,14 @@ public class ParserHelper {
 	private String replaceTemp;
 	private String foundM;
 	private String foundContent;
-	protected String regexPatnnerTag = "[%][%]+(\\w|\\w.\\w)+[%][%]";
+	protected String regexPatnnerTag = "[%][%]+(\\w|\\w.\\w|\\w_\\w)+[%][%]";
 	protected String ifBlock = "[%][%][i][f][\\(]+[a-zA-Z0-9_\\s\'\\=\\>\\<]+[\\)][%][%]";
 	protected String endBlock = "[%][%][/][i][f][%][%]";
 	protected String nifBlock = "[%][%][n][i][f][\\(]+[a-zA-Z0-9_\\s\']+[\\)][%][%]";
 	protected String nendBlock = "[%][%][/][n][i][f][%][%]";
 	protected String loopArtic = "[%][%]_loop_artic\\([0-9\\s][,][0-9\\s][\\)][%][%]";
 	protected String endloopArtic = "[%][%][/]_loop_artic[%][%]";
-	protected String macros = "[%][%]macro[\\(]+[a-zA-Z0-9_\\s\\'\\=\\>\\<\\.]+[\\)][%][%]";
+	protected String macros = "[%][%]macro[\\(]+[a-zA-Z0-9_\\s\\'\\=\\>\\<\\.\\/]+[\\)][%][%]";
 	protected String areas = "[%][%]_area[\\(]+[a-zA-Z0-9_\\s\\'\\=\\>\\<\\.\\,\\á\\é\\í\\ó\\ú\\Á\\É\\Í\\Ó\\Ú]+[\\)][%][%]";
 	protected String endAreas = "[%][%][/]_area[%][%]";
 
@@ -69,17 +69,18 @@ public class ParserHelper {
 		mapInputs.forEach((k, v) -> {
 			File f = new File(art_file + k + ".html");
 			if (f.exists() && !f.isDirectory()) {
-				System.out.println("\n exite "+art_file + k + ".html");
+				//System.out.println("\n exite "+art_file + k + ".html");
 				output = output.replaceAll("[%][%]" + k + "[%][%]",
 						"<!--#include virtual='" + art_path + k + ".html' -->");// value is into file
 			} else {
-				System.out.println("\n no exite");
+				//System.out.println("\n no exite");
 				output = output.replaceAll("[%][%]" + k + "[%][%]", v);
 			}
-			// System.out.println("%%" + k + "%%" + v);
 		});
 		
+		//vars empty to next invocation
 		art_path = "";
+		art_file = "";
 
 		findMore = true;
 		// ############### conditional Tags
@@ -118,7 +119,7 @@ public class ParserHelper {
 				// get content
 				String textBlock = in.substring(macrosMatches.start(), macrosMatches.end());
 				path = path + "macros/" + textBlock.replace(" ", "").replace("%%macro(", "").replace(")%%", "");
-				// System.out.println("\n\n\n\n###########Find content macro in: " + path);
+				//System.out.println("\n\n\n\n###########Find content macro in: " + path);
 				String macroContent = "macro: " + path + " Not found";
 				File f = new File(path);
 				if (f.exists() && !f.isDirectory()) {
@@ -557,8 +558,8 @@ public class ParserHelper {
 		});
 
 		// find area
-
-		System.out.println("\n queda by: " + outputTemplate);
+		outputTemplate = outputTemplate.replaceAll(regexPatnnerTag, "");
+		//System.out.println("\n queda by: " + outputTemplate);
 		return outputTemplate;
 
 	}
